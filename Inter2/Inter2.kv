@@ -1,0 +1,80 @@
+#:kivy 1.10.1
+
+
+<BG>:
+    #:set roadWidth 320
+    canvas:
+        Color:
+            rgb: 0.4, 0.8, 0.4
+        Rectangle:
+            size: self.width, self.height
+            pos: 0, 0
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: self.center_x-roadWidth/2, 0
+            size: roadWidth, self.height
+        Rectangle:
+            pos: 0, self.center_y-roadWidth/2
+            size: self.width, roadWidth
+        Color:
+            rgb: 0.7, 0.7, 0.1
+        Line:
+            width: 2
+            points: [0, self.center_y, self.right, self.center_y]
+        Line:
+            width: 2
+            points: [self.center_x, 0, self.center_x, self.top]
+        Line:
+            width: 1
+            points: [self.center_x-roadWidth/4, 0, self.center_x-roadWidth/4, self.top]
+            dash_length: 30
+            dash_offset: 27
+        Line:
+            width: 1
+            points: [self.center_x+roadWidth/4, 0, self.center_x+roadWidth/4, self.top]
+            dash_length: 30
+            dash_offset: 27
+        Line:
+            width: 1
+            points: [0, self.center_y+roadWidth/4, self.right,  self.center_y+roadWidth/4]
+            dash_length: 30
+            dash_offset: 27
+        Line:
+            width: 1
+            points: [0, self.center_y-roadWidth/4, self.right,  self.center_y-roadWidth/4]
+            dash_length: 30
+            dash_offset: 27
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: self.center_x-roadWidth/2, self.center_y-roadWidth/2
+            size: roadWidth, roadWidth
+
+<Car>:
+    size_hint: None, None
+    size: 40, 40
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: root.angle
+            origin: self.center_x, self.center_y
+        Color:
+            rgb: root.r, root.g, root.b
+        Rectangle:
+            size: self.width-2, self.height-4
+            pos: self.center_x-self.width/2+1, self.center_y-self.height/2+2
+        Color:
+            rgb: 0.8, 0.9, 1
+        Rectangle:
+            size: self.width-2, self.height*0.35-2
+            pos: self.center_x-self.width/2+1, self.center_y-self.height/2+2
+        Color:
+            rgb: root.r, root.g, root.b
+        Line:
+            rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
+            width: 2
+    canvas.after:
+        PopMatrix
+
+

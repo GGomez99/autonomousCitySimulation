@@ -3,10 +3,8 @@ import kivy
 from kivy.animation import Animation
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import NumericProperty, ReferenceListProperty
-from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.core.window import Window
 from random import randint
@@ -103,7 +101,7 @@ class Inter1App(App):
         if len(doNextMoveF)+len(doNextMoveR) == 0:
             # move by 1 every car
             for pathIndex in range(0, len(path)):
-                x, y = path[pathIndex][0],  path[pathIndex][1]
+                x, y = path[pathIndex]
                 newInterCase = {}
                 if inter1[x][y] != {0: []}:
                     for time, car in inter1[x][y].items():
@@ -140,11 +138,11 @@ class Inter1App(App):
                             markdown += 1
                             for i in range(way, way + car[2] + 1):
                                 pos = i % 4
-                                x, y = path[pos][0], path[pos][1]
+                                x, y = path[pos]
                                 doNotPath = doNotPath or (markdown + i - way) in inter1[x][y]
                         for i in range(way, way + car[2] + 1):  # Add whole path at end timeline
                             pos = i % 4
-                            x, y = path[pos][0], path[pos][1]
+                            x, y = path[pos]
                             inter1[x][y].update({markdown + i - way: car})
                         inQueue[way][carIndex][1] = markdown - 1  # Add when car exit inQueue
                         layout.add_widget(car[3])
@@ -171,7 +169,7 @@ class Inter1App(App):
             [{}, {}]
         ]
         outQueue = [[], [], [], []]
-        nbrCars = 10
+        nbrCars = 50
         for i in range(1, nbrCars + 1):
             startPt = randint(0, 3)
             inQueue[startPt].append([[i, startPt, randint(0, 2), Car(r=random()*0.4+0.5, g=random()*0.4+0.5, b=random()*0.4+0.5)], -1])
