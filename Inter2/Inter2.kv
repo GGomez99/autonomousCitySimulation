@@ -1,8 +1,68 @@
 #:kivy 1.10.1
 
+<Intersec>:
+    size_hint: None, None
+    size: 600,
+    pos: root.xPos, root.yPos
+
+<VertRoad>:
+    #:set roadWidth 320
+    canvas:
+        Color:
+            rgb: 0.4, 0.8, 0.4
+        Rectangle:
+            size: self.width, self.height
+            pos: 0, 0
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: self.center_x-roadWidth/2, 0
+            size: roadWidth, self.height
+        Color:
+            rgb: 0.7, 0.7, 0.1
+        Line:
+            width: 2
+            points: [self.center_x, 0, self.center_x, self.top]
+        Line:
+            width: 1
+            points: [self.center_x-roadWidth/4, 0, self.center_x-roadWidth/4, self.top]
+            dash_length: 30
+            dash_offset: 27
+        Line:
+            width: 1
+            points: [self.center_x+roadWidth/4, 0, self.center_x+roadWidth/4, self.top]
+            dash_length: 30
+            dash_offset: 27
+
+<HorizRoad>:
+    canvas:
+        Color:
+            rgb: 0.4, 0.8, 0.4
+        Rectangle:
+            size: self.width, self.height
+            pos: 0, 0
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: 0, self.center_y-roadWidth/2
+            size: self.width, roadWidth
+        Color:
+            rgb: 0.7, 0.7, 0.1
+        Line:
+            width: 2
+            points: [0, self.center_y, self.right, self.center_y]
+        Line:
+            width: 1
+            points: [0, self.center_y+roadWidth/4, self.right,  self.center_y+roadWidth/4]
+            dash_length: 30
+            dash_offset: 27
+        Line:
+            width: 1
+            points: [0, self.center_y-roadWidth/4, self.right,  self.center_y-roadWidth/4]
+            dash_length: 30
+            dash_offset: 27
 
 <BG>:
-    #:set roadWidth 320
     canvas:
         Color:
             rgb: 0.4, 0.8, 0.4

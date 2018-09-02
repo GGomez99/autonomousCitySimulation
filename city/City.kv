@@ -1,0 +1,101 @@
+#:kivy 1.10.1
+
+<VertRoad>:
+    size_hint: None, None
+    size: root.roadWidth, root.roadLength
+    canvas:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: self.center_x-self.width/2, self.center_y-self.height/2
+            size: self.width, self.height
+        Color:
+            rgb: 0.7, 0.7, 0.1
+        Line:
+            width: 2
+            points: [self.center_x, self.center_y-self.height/2, self.center_x, self.top]
+        Line:
+            width: 1
+            points: [self.center_x-root.roadWidth/4, self.center_y-self.height/2, self.center_x-root.roadWidth/4, self.top]
+            dash_length: 30
+            dash_offset: 27
+        Line:
+            width: 1
+            points: [self.center_x+root.roadWidth/4, self.center_y-self.height/2, self.center_x+root.roadWidth/4, self.top]
+            dash_length: 30
+            dash_offset: 27
+
+<HorizRoad>:
+    size_hint: None, None
+    size: root.roadLength, root.roadWidth
+    canvas:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: self.center_x-self.width/2, self.center_y-self.height/2
+            size: self.width, self.height
+        Color:
+            rgb: 0.7, 0.7, 0.1
+        Line:
+            width: 2
+            points: [self.center_x-self.width/2, self.center_y, self.right, self.center_y]
+        Line:
+            width: 1
+            points: [self.center_x-self.width/2, self.center_y+root.roadWidth/4, self.right,  self.center_y+root.roadWidth/4]
+            dash_length: 30
+            dash_offset: 27
+        Line:
+            width: 1
+            points: [self.center_x-self.width/2, self.center_y-root.roadWidth/4, self.right,  self.center_y-root.roadWidth/4]
+            dash_length: 30
+            dash_offset: 27
+
+<Grass>:
+    size_hint: None, None
+    canvas:
+        Color:
+            rgb: 0.4, 0.8, 0.4
+        Rectangle:
+            size: self.width, self.height
+            pos: self.center_x-self.width/2, self.center_y-self.width/2
+
+<Intersec>:
+    #:set size 4
+    size_hint: None, None
+    size: root.roadWidth, root.roadWidth
+    canvas:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            size: self.width, self.height
+            pos: self.center_x-self.width/2, self.center_y-self.width/2
+        Color:
+            rgb: 0.7, 0.7, 0.1
+
+<Car>:
+    size_hint: None, None
+    size: 40, 40
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: root.angle
+            origin: self.center_x, self.center_y
+        Color:
+            rgb: root.r, root.g, root.b
+        Rectangle:
+            size: self.width-2, self.height-4
+            pos: self.center_x-self.width/2+1, self.center_y-self.height/2+2
+        Color:
+            rgb: 0.8, 0.9, 1
+        Rectangle:
+            size: self.width-2, self.height*0.35-2
+            pos: self.center_x-self.width/2+1, self.center_y-self.height/2+2
+        Color:
+            rgb: root.r, root.g, root.b
+        Line:
+            rounded_rectangle: [self.x, self.y, self.width, self.height, 10]
+            width: 2
+    canvas.after:
+        PopMatrix
+
+
