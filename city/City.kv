@@ -2,7 +2,7 @@
 
 <VertRoad>:
     size_hint: None, None
-    size: root.roadWidth, root.roadLength
+    size: root.roadWidth, root.roadLength*40*2
     canvas:
         Color:
             rgb: 0.2, 0.2, 0.2
@@ -27,7 +27,7 @@
 
 <HorizRoad>:
     size_hint: None, None
-    size: root.roadLength, root.roadWidth
+    size: root.roadLength*40*2, root.roadWidth
     canvas:
         Color:
             rgb: 0.2, 0.2, 0.2
@@ -97,5 +97,3 @@
             width: 2
     canvas.after:
         PopMatrix
-
-
