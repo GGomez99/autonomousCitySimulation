@@ -83,7 +83,7 @@ class VertRoad(Widget):
         anim.bind(on_complete=partial(popNextMoveF))
 
 
-    def roadProg(self, *largs):
+    def roadProg(self):
 
         if loaded:
             queue = currentMat[self.xPos][self.yPos]
@@ -95,7 +95,6 @@ class VertRoad(Widget):
                         for i in range(0, len(queue[direction][way])):
                             if queue[direction][way][i][1] == -2:
                                 car = queue[direction][way][-1][0]
-                                print(len(self._pathAnim[direction][way]))
                                 self.move(car[3], self._pathAnim[direction][way][i], animDurRoad)
                                 if i == 0:
                                     queue[direction][way][i][1] = -1
@@ -114,8 +113,8 @@ class VertRoad(Widget):
             self.move(car, self._pathAnim[coord[0]][coord[1]][-1], 0)
             print(inQueue[self.xPos][self.yPos])'''
 
-    def startClock(self):
-        Clock.schedule_interval(partial(self.roadProg), 1 / 80)
+    def doTurn(self, *largs):
+        self.roadProg()
 
 
 
@@ -165,7 +164,7 @@ class HorizRoad(Widget):
         anim.start(car)
         anim.bind(on_complete=partial(popNextMoveF))
 
-    def roadProg(self, *largs):
+    def roadProg(self):
 
         if loaded:
             queue = currentMat[self.xPos][self.yPos]
@@ -191,8 +190,8 @@ class HorizRoad(Widget):
             self.move(car, self._pathAnim[coord[0]][coord[1]][-1], 0)
             print(inQueue[self.xPos][self.yPos])'''
 
-    def startClock(self):
-        Clock.schedule_interval(partial(self.roadProg), 1 / 80)
+    def doTurn(self, *largs):
+        self.roadProg()
 
 class Grass(Widget):
     pass
@@ -209,7 +208,7 @@ class Intersec(Widget):
     yPos = NumericProperty(0)
     roadWidth = NumericProperty(0)
 
-    def intersecProg(self, *largs):
+    def intersecProg(self):
 
         if loaded:
             inter = currentMat[self.xPos][self.yPos]
@@ -303,7 +302,6 @@ class Intersec(Widget):
                                         timeLastCar = outQueue[carDest[0]][carDest[1]][-1][1] + 1
                                     else:
                                         timeLastCar = -1
-                                    print(((carDest[0] + 2) % 4, carDest[1]))
                                     car[1] = ((carDest[0] + 2) % 4, carDest[1])
                                     outQueue[carDest[0]][carDest[1]].append([car, timeLastCar])            # move car to outqueue if reach destination
                                     moveCar(car, outQueueAnim[carDest[0]][carDest[1]], animDurInt)
@@ -315,12 +313,15 @@ class Intersec(Widget):
 
                 for road in range(0, len(inQueue)):                         # remove or reduce timer for cars in inqueue
                     for way in range(0, len(inQueue[road])):
-                        for i in range(0, len(inQueue[road][way])):
-                            item = inQueue[road][way][i]
-                            if i == 0 and item[1] == 0:
+
+                        if len(inQueue[road][way]) > 0:
+                            firstCar = inQueue[road][way][0]
+                            if firstCar[1] == 0:
                                 inQueue[road][way].pop(0)
-                            if item[1] > 0:
-                                item[1] -= 1
+                            for i in range(0, len(inQueue[road][way])):
+                                item = inQueue[road][way][i]
+                                if item[1] > 0:
+                                    item[1] -= 1
 
 
                 # take care of queue (add paths for cars)
@@ -419,8 +420,8 @@ class Intersec(Widget):
                             list.append(str(key)+": "+str(item[0]))
                         print(list)'''
 
-    def startClock(self):
-        Clock.schedule_interval(partial(self.intersecProg), 1 / 80)
+    def doTurn(self, *largs):
+        self.intersecProg()
 
 
 class CityApp(App):
@@ -431,19 +432,26 @@ class CityApp(App):
     global roadLength
     global currentMat
     global loaded
+    global caseClasses
+    global timeC
+    global doNextAnim
 
     loaded = False
-    citySize = 5
+    citySize = 3
     roadWidth = 320
     roadLength = 5
     ttLength = (int(citySize / 2) + citySize % 2) * roadWidth + int(citySize / 2) * roadLength * 40 * 2
     currentMat = []
+    caseClasses = [[[] for j in range(citySize)] for i in range(citySize)]
+    timeC = 0
+    doNextAnim = True
+
     for x in range(0, citySize+2):
         currentMat.append([])
         for y in range(0, citySize+2):
             currentMat[x].append([[[], []], [[], []]])
 
-    def addCars(self, city, *largs):
+    def addCars(self, city):
         startPt = (randint(0, 3), randint(0, 1))
         destination = (randint(0, 2), randint(0, 1))
         car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5)
@@ -452,8 +460,24 @@ class CityApp(App):
              -1])
         city.add_widget(car)
 
+    def doStuff(self, city, *largs):
+        global timeC
+        global doNextAnim
+        if doNextAnim:
+            doNextAnim = False
+            if timeC == 50:
+                self.addCars(city)
+                timeC = 0
+            else: timeC += 1
+            for x in range(citySize):
+                for y in range(citySize):
+                    if x%2 == 0 and y%2 == 0 or (x+y)%2 == 1:
+                        caseClasses[x][y].doTurn()
+            print(currentMat[2][3])
+            doNextAnim = True
+
     def status(self, dt):
-        print(currentMat)
+        print("status : " + str(currentMat[2][3]))
 
     def build(self):
 
@@ -474,17 +498,17 @@ class CityApp(App):
                     ]
                     inter = Intersec(roadWidth=roadWidth, xPos=x+1, yPos=y+1)
                     row.add_widget(inter)
-                    inter.startClock()
+                    caseClasses[x][y] = inter
                 elif y%2 == 1 and x%2 == 0:    # horizontal road
-                    currentMat[x][y] = [[[], []], [[], []]]
+                    currentMat[x+1][y+1] = [[[], []], [[], []]]
                     hRoad = HorizRoad(roadWidth=roadWidth, roadLength=roadLength, xPos=+1, yPos=y+1)
                     row.add_widget(hRoad)
-                    hRoad.startClock()
+                    caseClasses[x][y] = hRoad
                 elif x%2 == 1 and y%2 == 0:           # vertical road
                     currentMat[x+1][y+1] = [[[], []], [[], []]]
                     vRoad = VertRoad(roadWidth=roadWidth, roadLength=roadLength, xPos=x+1, yPos=y+1)
                     row.add_widget(vRoad)
-                    vRoad.startClock()
+                    caseClasses[x][y] = vRoad
                 else:
                     currentMat[x+1][y+1] = "Empty"
                     row.add_widget(Grass(size=(roadLength*40*2, roadLength*40*2)))
@@ -493,7 +517,7 @@ class CityApp(App):
 
         scatter = Scatter()
         scatter.add_widget(city)
-        Clock.schedule_interval(partial(self.addCars, city), 4)
+        Clock.schedule_interval(partial(self.doStuff, scatter), 1/30)
         return scatter
 
 

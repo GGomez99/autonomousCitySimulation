@@ -65,8 +65,6 @@ class Inter2App(App):
             for j in range(0, 1):
                 ttCarsOut = ttCarsOut + len(outQueue[i][j])
                 ttCarsIn = ttCarsIn + len(inQueue[i][j])
-        if ttCarsOut > ttCarsIn:
-            print(str(ttCarsOut) + " cars in " + str(clock() - t0) + "s")
 
         pathAnim = [
             ((c[0] - roadAlign * 3, c[1] + roadAlign * 3), (c[0] - roadAlign, c[1] + roadAlign * 3), (c[0] + roadAlign, c[1] + roadAlign * 3), (c[0] + roadAlign * 3, c[1] + roadAlign * 3)),
