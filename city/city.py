@@ -5,27 +5,21 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scatter import Scatter
+from kivy.uix.label import Label
 from kivy.properties import NumericProperty, ListProperty
 from kivy.clock import Clock
 from random import randint
 from random import random
 from functools import partial
+from kivy.core.window import Window
 
-'''
-car model : [id, where come from, where to go]
-where to go: (turns, nbr way(0 or 1))
-turns: forward(1),right(0),left(2)
-intersec path[pos]:
-            _|0   |_
-                    3
-           1_      _
-             |   2|
-'''
 global animDurRoad
 global animDurInt
+global mode
 
 animDurInt = 0.3
-animDurRoad = 1
+animDurRoad = 0.3
+mode = "Infinite"
 
 class Car(Widget):
     angle = NumericProperty(0)
@@ -62,56 +56,51 @@ class VertRoad(Widget):
                 [[]] * self.roadLength
             ]
         ]
+
+    def calcPos(self):
         c = self.center
         o = [c[0] - 20, c[1] + self.height / 2 - 20, c[1] - self.height / 2 - 20]
         for i in range(0, len(self._pathAnim[0][0])):
             for way in range(0, 2):
                 for j in range(0, 2):
                     self._pathAnim[way][j][i] = [
-                        (1 - j) * (o[0] + (-2 * way + 1) * 40 * 3) + j * (o[0] + (-2 * way + 1) * 40),
+                        (1 - j) * (o[0] + (2 * way - 1) * 40 * 3) + j * (o[0] + (2 * way - 1) * 40),
                         o[2 - way] + (-2 * way + 1) * (i * 2 + 1) * 40,
                     ]
 
-    def move(self, car, futurePos, dur):
-
-        def popNextMoveF(anim, widget):
+    def move(self, carData, futurePos, dur):
+        car = carData[0][3]
+        def onFinish(carData, anim, widget, *largs):
             self._doNextMoveF.pop()
+            carData[1] = "Waiting"
 
         anim = Animation(pos=futurePos, duration=dur)
         self._doNextMoveF.append(False)
         anim.start(car)
-        anim.bind(on_complete=partial(popNextMoveF))
+        anim.bind(on_complete=partial(onFinish, carData))
 
 
     def roadProg(self):
 
         if loaded:
+            if self._pathAnim[0][0][0] == []: self.calcPos()
             queue = currentMat[self.xPos][self.yPos]
 
             if len(self._doNextMoveF) == 0:
                 # check queue
                 for direction in range(0, 2):
                     for way in range(0, 2):
-                        for i in range(0, len(queue[direction][way])):
-                            if queue[direction][way][i][1] == -2:
-                                car = queue[direction][way][-1][0]
-                                self.move(car[3], self._pathAnim[direction][way][i], animDurRoad)
-                                if i == 0:
-                                    queue[direction][way][i][1] = -1
-                                else:
-                                    queue[direction][way][i][1] = queue[direction][way][i-1][1]+1
+                        for i in range(1, roadLength):
 
-        '''def addRandomCars(self, *largs):
-            startPt = (randint(0, 3), randint(0, 1))
-            destination = (randint(0, 2), randint(0, 1))
-            coord = (randint(0, 1), randint(0, 1))
-            car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5)
-            currentMat[self.xPos][self.yPos][coord[0]][coord[1]].append(
-                [[0, startPt, destination, car],
-                 -2])
-            self.add_widget(car)
-            self.move(car, self._pathAnim[coord[0]][coord[1]][-1], 0)
-            print(inQueue[self.xPos][self.yPos])'''
+                            carData = queue[direction][way][i]
+                            nextCarData = queue[direction][way][i-1]
+                            if carData != None:
+                                if carData[1] == "Waiting" and nextCarData == None:
+                                    queue[direction][way][i] = None
+                                    queue[direction][way][i - 1] = carData
+                                    carData[1] = "Moving"
+                                    self.move(carData, self._pathAnim[direction][way][i-1], animDurRoad)
+
 
     def doTurn(self, *largs):
         self.roadProg()
@@ -144,39 +133,54 @@ class HorizRoad(Widget):
                 [[]] * self.roadLength
             ]
         ]
+
+    def calcPos(self):
         c = self.center
-        o = [c[0] - self.width / 2 - 20, c[0] + self.width / 2 - 20, c[1] - 20]
+        if self.xPos == 1:
+            c[1] = ttLength - 160
+        o = [c[0] + self.width / 2 - 20, c[0] - self.width / 2 - 20, c[1] - 20]
         for i in range(0, len(self._pathAnim[0][0])):
             for way in range(0, 2):
                 for j in range(0, 2):
                     self._pathAnim[way][j][i] = [
-                        o[way] + (-2 * way + 1) * (i * 2 + 1) * 40,
+                        o[way] + (2 * way - 1) * (i * 2 + 1) * 40,
                         (1 - j) * (o[2] + (2 * way - 1) * 40 * 3) + j * (o[2] + (2 * way - 1) * 40),
                     ]
 
-    def move(self, car, futurePos, dur):
-
-        def popNextMoveF(anim, widget):
+    def move(self, carData, futurePos, dur):
+        car = carData[0][3]
+        def onFinish(carData, anim, widget, *largs):
             self._doNextMoveF.pop()
+            carData[1] = "Waiting"
 
         anim = Animation(pos=futurePos, duration=dur)
         self._doNextMoveF.append(False)
         anim.start(car)
-        anim.bind(on_complete=partial(popNextMoveF))
+        anim.bind(on_complete=partial(onFinish, carData))
+
 
     def roadProg(self):
 
         if loaded:
+            if self._pathAnim[0][0][0] == []:
+                self.calcPos()
             queue = currentMat[self.xPos][self.yPos]
 
             if len(self._doNextMoveF) == 0:
                 # check queue
                 for direction in range(0, 2):
                     for way in range(0, 2):
-                        for i in range(0, len(queue[direction][way])):
-                            car = queue[direction][way][-1][0]
-                            self.move(car[3], self._pathAnim[direction][way][i], animDurRoad)
+                        for i in range(1, roadLength):
 
+                            carData = queue[direction][way][i]
+                            nextCarData = queue[direction][way][i-1]
+                            if carData != None:
+                                if carData[1] == "Waiting" and nextCarData == None:
+                                    queue[direction][way][i] = None
+                                    queue[direction][way][i - 1] = carData
+                                    carData[1] = "Moving"
+                                    self.move(carData, self._pathAnim[direction][way][i-1], animDurRoad)
+                if self.xPos == 3 and self.yPos == 2 : print("state : " + str(queue))
 
         '''def addRandomCars(self, *largs):
             startPt = (randint(0, 3), randint(0, 1))
@@ -198,7 +202,19 @@ class Grass(Widget):
 
 class Intersec(Widget):
 
+    '''
+    car model : [id, where come from, where to go]
+    where to go: (turns, nbr way(0 or 1))
+    turns: forward(1),right(0),left(2)
+    intersec path[pos]:
+                _|0   |_
+                        3
+               1_      _
+                 |   2|
+    '''
+
     global currentMat
+    global roadLength
 
     def __init__(self, **kwargs):
         super(Intersec, self).__init__(**kwargs)
@@ -243,8 +259,8 @@ class Intersec(Widget):
             ]
 
 
-            nbrCars = sum([len(way) for way in inQueue])
-            def moveCar(car, futurePos, ttDur):
+            def moveCar(carData, futurePos, ttDur):
+                car = carData[0]
                 oldPos = car[3].pos[:]
                 angle = car[3].angle
                 movex, movey = futurePos[0] - oldPos[0], futurePos[1] - oldPos[1]
@@ -259,24 +275,24 @@ class Intersec(Widget):
                 else:
                     correctAngle = 180
 
-                def forwardAnim(futurePos, dur, *largs):
+                def forwardAnim(futurePos, dur, carData, *largs):
                     self._doNextMoveR.pop()
                     anim = Animation(pos=futurePos, duration=ttDur-dur)
                     self._doNextMoveF.append(False)
                     anim.start(largs[1])
-                    anim.bind(on_complete=partial(popNextMoveF))
+                    anim.bind(on_complete=partial(onFinish, carData))
 
                 dur = ttDur*0.1
                 if correctAngle == angle: dur = 0
                 self._doNextMoveR.append(False)
                 rotat = Animation(angle=correctAngle, duration=dur)
                 rotat.start(car[3])
-                rotat.bind(on_complete=partial(forwardAnim, futurePos, dur))
+                rotat.bind(on_complete=partial(forwardAnim, futurePos, dur, carData))
 
 
             def checkPass(currentPos, posToGo, time):
                 if time in inter[posToGo[0]][posToGo[1]]:
-                    potBlocCar = inter[posToGo[0]][posToGo[1]][time]
+                    potBlocCar = inter[posToGo[0]][posToGo[1]][time][0]
                     if potBlocCar[2][0] == 1 and potBlocCar[1][1] != potBlocCar[2][1]:  # check if goes forward and changes way
                         if (time+1) in inter[currentPos[0]][currentPos[1]]:
                             if potBlocCar[0] == inter[currentPos[0]][currentPos[1]][time+1][0]: # check if that car goes where you are
@@ -286,8 +302,9 @@ class Intersec(Widget):
                 else:
                     return False
 
-            def popNextMoveF(anim, widget):
+            def onFinish(carData, anim, widget, *largs):
                 self._doNextMoveF.pop()
+                carData[1] = "Waiting"
 
             if len(self._doNextMoveF)+len(self._doNextMoveR) == 0:
                 # move by 1 every car
@@ -295,40 +312,41 @@ class Intersec(Widget):
                     for y in range(0, nbrWays * 2):
                         newInterCase = {}
                         if inter[x][y] != {0: []}:
-                            for time, car in inter[x][y].items():
-                                carDest = ((car[1][0] + car[2][0] + 1) % 4, car[2][1])
+                            for time, carData in inter[x][y].items():
+                                car = carData[0]
+                                carDest = ((car[1][0] + car[2][0][0] + 1) % 4, car[2][0][1])
                                 if endPos[carDest[0]][carDest[1]] == (x, y) and time == 0:
-                                    if len(outQueue[carDest[0]][carDest[1]]) > 0:
-                                        timeLastCar = outQueue[carDest[0]][carDest[1]][-1][1] + 1
-                                    else:
-                                        timeLastCar = -1
                                     car[1] = ((carDest[0] + 2) % 4, carDest[1])
-                                    outQueue[carDest[0]][carDest[1]].append([car, timeLastCar])            # move car to outqueue if reach destination
-                                    moveCar(car, outQueueAnim[carDest[0]][carDest[1]], animDurInt)
+                                    car[2].pop(0)
+                                    if mode == "Infinite" and len(car[2]) == 0:
+                                        car[2].append((randint(0, 2), randint(0, 1)))
+                                    outQueue[carDest[0]][carDest[1]][roadLength-1] = [car, "Moving"]          # move car to outqueue if reach destination
+                                    moveCar(outQueue[carDest[0]][carDest[1]][roadLength-1], outQueueAnim[carDest[0]][carDest[1]], animDurInt)
                                 elif time != 0:
-                                    newInterCase.update({time - 1: car})                    # move by 1 on timeline in case
+                                    state = "futurePos"
+                                    if time == 1: state = "Waiting"
+                                    newInterCase.update({time - 1: [car, state]})                    # move by 1 on timeline in case
                             inter[x][y] = newInterCase                                     # change the state of the case
                             if 0 in inter[x][y]:
+                                newInterCase[0][1] = "Moving"
                                 moveCar(newInterCase[0], pathAnim[x][y], animDurInt)
 
-                for road in range(0, len(inQueue)):                         # remove or reduce timer for cars in inqueue
+                for road in range(0, len(inQueue)):                         # remove cars inqueue when entering intersec
                     for way in range(0, len(inQueue[road])):
-
-                        if len(inQueue[road][way]) > 0:
+                        if inQueue[road][way][0] != None:
                             firstCar = inQueue[road][way][0]
                             if firstCar[1] == 0:
-                                inQueue[road][way].pop(0)
-                            for i in range(0, len(inQueue[road][way])):
-                                item = inQueue[road][way][i]
-                                if item[1] > 0:
-                                    item[1] -= 1
+                                inQueue[road][way][0] = None
+                            elif isinstance(firstCar[1], int):
+                                inQueue[road][way][0][1] -= 1
 
 
                 # take care of queue (add paths for cars)
                 for road in range(0, 4):
                     for way in range(0, nbrWays):
-                        if len(inQueue[road][way]) > 0 and inQueue[road][way][0][1] == -1:
+                        if inQueue[road][way][0] != None and inQueue[road][way][0][1] == "Waiting":
                             car = inQueue[road][way][0][0]
+                            dest = car[2][0]
                             doNotPath = True
                             markdown = 0
                             testPath = []
@@ -339,18 +357,18 @@ class Intersec(Widget):
                                 doNotPath = doNotPath or markdown in inter[x][y]
                                 testPath = [markdown]
 
-                                if car[2][0] != 1:                          # not forward
+                                if dest[0] != 1:                          # not forward
                                     futurePath = [(x, y)]
-                                    for i in range(0, car[2][0] + abs(car[2][1] - int(car[2][0]*(1/2)))):         # go straight until facing exit
+                                    for i in range(0, dest[0] + abs(dest[1] - int(dest[0]*(1/2)))):         # go straight until facing exit
                                         x, y = x + dirToTake[car[1][0]][0], y + dirToTake[car[1][0]][1]
                                         futurePath.append((x, y))
                                         doNotPath = doNotPath or checkPass(futurePath[-2], (x, y), markdown + i)
                                         testPath.append(markdown + i + 1)
 
                                     x, y = futurePath[-1]
-                                    markDone = car[2][0] + abs(car[2][1] - int(car[2][0]*(1/2)))
-                                    for i in range(0, car[2][0] + abs(car[1][1] - int(car[2][0]*(1/2)))):        # straight after the turn towards exit
-                                        turnDir = (car[1][0]+car[2][0]-1) % 4
+                                    markDone = dest[0] + abs(dest[1] - int(dest[0]*(1/2)))
+                                    for i in range(0, dest[0] + abs(car[1][1] - int(dest[0]*(1/2)))):        # straight after the turn towards exit
+                                        turnDir = (car[1][0]+dest[0]-1) % 4
                                         x, y = x + dirToTake[turnDir][0], y + dirToTake[turnDir][1]
                                         futurePath.append((x, y))
                                         doNotPath = doNotPath or checkPass(futurePath[-2], (x, y), markdown + i + markDone)
@@ -359,7 +377,7 @@ class Intersec(Widget):
 
                                 else:                                       # forward
                                     futurePath = [(x, y)]
-                                    if car[1][1] != car[2][1]:      # if have to change way
+                                    if car[1][1] != dest[1]:      # if have to change way
                                         indexChange = 0
                                         doNotPath = True
                                         while doNotPath and indexChange < nbrWays*2:
@@ -373,8 +391,8 @@ class Intersec(Widget):
 
                                             for i in range(0, nbrWays*2):
                                                 if i == indexChange:
-                                                    changeMovX = startPos[car[1][0]][car[2][1]][0] - startPos[car[1][0]][car[1][1]][0]
-                                                    changeMovY = startPos[car[1][0]][car[2][1]][1] - startPos[car[1][0]][car[1][1]][1]
+                                                    changeMovX = startPos[car[1][0]][dest[1]][0] - startPos[car[1][0]][car[1][1]][0]
+                                                    changeMovY = startPos[car[1][0]][dest[1]][1] - startPos[car[1][0]][car[1][1]][1]
                                                     x, y = x + changeMovX, y + changeMovY
                                                     doNotPath = doNotPath or (markdown + i) in inter[x][y]
                                                     testPath.append("front collide test: " + str(markdown + i))
@@ -399,7 +417,7 @@ class Intersec(Widget):
                                     print("    tested " + str(testPath))
                                     print("    adding from " + str(markdown) + " to " + str(markdown + len(futurePath) - 1))
                                     print("Oldkey from" + str(inter[x][y][markdown + i][0]))
-                                inter[x][y].update({markdown + i: car})
+                                inter[x][y].update({markdown + i: [car, "futurePos"]})
 
                             '''for i in range(0, 4):
                                 for j in range(0, 4):
@@ -435,9 +453,12 @@ class CityApp(App):
     global caseClasses
     global timeC
     global doNextAnim
+    global doNextAnimR
+    global spawnCoord
+    global carId
 
     loaded = False
-    citySize = 3
+    citySize = 11
     roadWidth = 320
     roadLength = 5
     ttLength = (int(citySize / 2) + citySize % 2) * roadWidth + int(citySize / 2) * roadLength * 40 * 2
@@ -445,39 +466,84 @@ class CityApp(App):
     caseClasses = [[[] for j in range(citySize)] for i in range(citySize)]
     timeC = 0
     doNextAnim = True
+    doNextAnimR = True
+    spawnCoord = [{} for x in range(citySize+2)]
+    carId = 0
+
+    Window.size = (750, 750)
 
     for x in range(0, citySize+2):
         currentMat.append([])
         for y in range(0, citySize+2):
-            currentMat[x].append([[[], []], [[], []]])
+            currentMat[x].append([[{0: None}, {0: None}], [{0: None}, {0: None}]])
+
+    for x in range(1, citySize+1):
+        for y in [0, citySize+1]:
+            spawnCoord[x][y] = [[], []]
+            for i in range(2):
+                spawnCoord[x][y][i] = (y/(citySize+1) * (ttLength + 80) - 60, ttLength - roadWidth/2 - (x-1) * (roadLength*40 + roadWidth/2) - 60 - (1-i)*80 + y/(citySize+1)*160)
+    for y in range(1, citySize+1):
+        for x in [0, citySize+1]:
+            spawnCoord[x][y] = [[], []]
+            for i in range(2):
+                spawnCoord[x][y][i] = (roadWidth/2 + (y-1) * (roadLength*40 + roadWidth/2) - 140 + (1-i)*80 + x/(citySize+1)*160, (1 - x/(citySize+1)) * (ttLength + 80) - 60)
 
     def addCars(self, city):
+        global carId
         startPt = (randint(0, 3), randint(0, 1))
-        destination = (randint(0, 2), randint(0, 1))
-        car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5)
-        currentMat[2][3][0][0].append(
-            [[0, (0, 0), destination, car],
-             -1])
-        city.add_widget(car)
+        startCoord = [0, 0, 0, startPt[1]]
+        if startPt[0] == 0:
+            startCoord[1] = 2*randint(0, citySize//2)+1
+            startCoord[3] = 1 - startCoord[3]
+        elif startPt[0] == 1:
+            startCoord[0] = 2*randint(0, citySize//2)+1
+        elif startPt[0] == 2:
+            startCoord[0] = citySize+1
+            startCoord[1] = 2*randint(0, citySize//2)+1
+            startCoord[2] = 1
+        else:
+            startCoord[0] = 2*randint(0, citySize//2)+1
+            startCoord[1] = citySize + 1
+            startCoord[2] = 1
+            startCoord[3] = 1 - startCoord[3]
 
-    def doStuff(self, city, *largs):
+        destination = []
+        if mode == "Infinite": destination.append((randint(0, 2), randint(0, 1)))
+        spawnPos = spawnCoord[startCoord[0]][startCoord[1]][startCoord[3]]
+        car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5, pos=spawnPos)
+
+        if currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] == None:
+            currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] = [[carId, startPt, destination, car], "Waiting"]
+            city.add_widget(car)
+            carId += 1
+
+    def doIntersec(self, city, *largs):
         global timeC
         global doNextAnim
         if doNextAnim:
             doNextAnim = False
-            if timeC == 50:
+            if timeC == 10:
                 self.addCars(city)
                 timeC = 0
             else: timeC += 1
             for x in range(citySize):
                 for y in range(citySize):
-                    if x%2 == 0 and y%2 == 0 or (x+y)%2 == 1:
+                    if x%2 == 0 and y%2 == 0:
                         caseClasses[x][y].doTurn()
-            print(currentMat[2][3])
             doNextAnim = True
 
-    def status(self, dt):
-        print("status : " + str(currentMat[2][3]))
+    def doRoads(self, city, *largs):
+        global doNextAnimR
+        if doNextAnimR:
+            doNextAnimR = False
+            for x in range(citySize):
+                for y in range(citySize):
+                    if (x+y)%2 == 1:
+                        caseClasses[x][y].doTurn()
+            doNextAnimR = True
+
+    '''def status(self, dt):
+        print("status : " + str(currentMat[2][3]))'''
 
     def build(self):
 
@@ -500,12 +566,20 @@ class CityApp(App):
                     row.add_widget(inter)
                     caseClasses[x][y] = inter
                 elif y%2 == 1 and x%2 == 0:    # horizontal road
-                    currentMat[x+1][y+1] = [[[], []], [[], []]]
-                    hRoad = HorizRoad(roadWidth=roadWidth, roadLength=roadLength, xPos=+1, yPos=y+1)
+                    currentMat[x+1][y+1] = [[{}, {}], [{}, {}]]
+                    for road in currentMat[x+1][y+1]:
+                        for way in road:
+                            for i in range(roadLength):
+                                way[i] = None
+                    hRoad = HorizRoad(roadWidth=roadWidth, roadLength=roadLength, xPos=x+1, yPos=y+1)
                     row.add_widget(hRoad)
                     caseClasses[x][y] = hRoad
                 elif x%2 == 1 and y%2 == 0:           # vertical road
-                    currentMat[x+1][y+1] = [[[], []], [[], []]]
+                    currentMat[x + 1][y + 1] = [[{}, {}], [{}, {}]]
+                    for road in currentMat[x + 1][y + 1]:
+                        for way in road:
+                            for i in range(roadLength):
+                                way[i] = None
                     vRoad = VertRoad(roadWidth=roadWidth, roadLength=roadLength, xPos=x+1, yPos=y+1)
                     row.add_widget(vRoad)
                     caseClasses[x][y] = vRoad
@@ -515,9 +589,10 @@ class CityApp(App):
             city.add_widget(row)
         loaded = True
 
-        scatter = Scatter()
+        scatter = Scatter(do_rotation=False, scale=0.5)
         scatter.add_widget(city)
-        Clock.schedule_interval(partial(self.doStuff, scatter), 1/30)
+        Clock.schedule_interval(partial(self.doIntersec, scatter), 1/120)
+        Clock.schedule_interval(partial(self.doRoads, scatter), 1/120)
         return scatter
 
 
