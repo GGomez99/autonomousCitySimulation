@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/animate.py" line="59" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c9245f6-1c31-460d-b3de-9bb7144fdd2a" name="Default Changelist" comment="">
+    <list default="true" id="2c9245f6-1c31-460d-b3de-9bb7144fdd2a" name="Default Changelist" comment="Add working city model (1 bug left)">
+      <change beforePath="$PROJECT_DIR$/.idea/Tipe.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tipe.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/city/city.py" beforeDir="false" afterPath="$PROJECT_DIR$/city/city.py" afterDir="false" />
     </list>
@@ -88,16 +87,20 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="Python Console" value="22" />
-          <entry key="py" value="1081" />
+          <entry key="Python Console" value="66" />
+          <entry key="py" value="2055" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1103" />
+          <entry key="Python" value="2121" />
         </counts>
       </usages-collector>
-      <usages-collector id="statistics.vcs.git.usages" />
+      <usages-collector id="statistics.vcs.git.usages">
+        <counts>
+          <entry key="git.branch.create.new" value="1" />
+        </counts>
+      </usages-collector>
     </session>
   </component>
   <component name="FavoritesManager">
@@ -108,12 +111,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/city/city.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5552">
-              <caret line="2" column="36" lean-forward="true" selection-start-line="2" selection-start-column="36" selection-end-line="2" selection-end-column="36" />
+            <state relative-caret-position="448">
+              <caret line="696" column="70" selection-start-line="696" selection-start-column="69" selection-end-line="696" selection-end-column="70" />
               <folding>
-                <marker date="1558189347056" expanded="true" signature="1405:1890" ph="..." />
-                <marker date="1558189347056" expanded="true" signature="26757:26762" ph="..." />
-                <marker date="1558189347056" expanded="true" signature="27245:27254" ph="..." />
+                <element signature="e#0#11#0" expanded="true" />
+                <marker date="1558639992016" expanded="true" signature="29199:29208" ph="..." />
               </folding>
             </state>
           </provider>
@@ -122,8 +124,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/city/City.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1360">
-              <caret line="80" column="29" selection-start-line="80" selection-start-column="29" selection-end-line="80" selection-end-column="29" />
+            <state relative-caret-position="646">
+              <caret line="99" selection-start-line="99" selection-end-line="99" />
             </state>
           </provider>
         </entry>
@@ -169,6 +171,11 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -185,10 +192,10 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="54" />
-    <option name="width" value="1871" />
-    <option name="height" value="1096" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="width" value="1385" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -200,8 +207,13 @@
         <subPane>
           <expand>
             <path>
-              <item name="Tipe" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Tipe" type="462c0819:PsiDirectoryNode" />
+              <item name="autonomousCitySimulation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="autonomousCitySimulation" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="autonomousCitySimulation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="autonomousCitySimulation" type="462c0819:PsiDirectoryNode" />
+              <item name="city" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -223,6 +235,119 @@
       <recent name="D:\Users\Guyllian\Documents\Tipe\Inter2" />
     </key>
   </component>
+  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
+    <UpdatedFiles>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Updated from server" />
+        <option name="myStatusName" value="Changed on server" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="CHANGED_ON_SERVER" />
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated" />
+          <option name="myStatusName" value="Changed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/Tipe.iml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/misc.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/workspace.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/city/city.py</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Created" />
+          <option name="myStatusName" value="Created" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CREATED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Deleted" />
+          <option name="myStatusName" value="Deleted" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="true" />
+          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Restored" />
+          <option name="myStatusName" value="Will be restored" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="RESTORED" />
+        </FILE-GROUP>
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Modified" />
+        <option name="myStatusName" value="Modified" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MODIFIED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Skipped" />
+        <option name="myStatusName" value="Skipped" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SKIPPED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with conflicts" />
+        <option name="myStatusName" value="Will be merged with conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_CONFLICTS" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with tree conflicts" />
+        <option name="myStatusName" value="Merged with tree conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with property conflicts" />
+        <option name="myStatusName" value="Will be merged with property conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged" />
+        <option name="myStatusName" value="Will be merged" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Not in repository" />
+        <option name="myStatusName" value="Not in repository" />
+        <option name="mySupportsDeletion" value="true" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="UNKNOWN" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally added" />
+        <option name="myStatusName" value="Locally added" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_ADDED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally removed" />
+        <option name="myStatusName" value="Locally removed" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_REMOVED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Switched" />
+        <option name="myStatusName" value="Switched" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SWITCHED" />
+      </FILE-GROUP>
+    </UpdatedFiles>
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -235,7 +360,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.intersection2">
+  <component name="RunManager" selected="Python.city">
     <configuration name="animate" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tipe" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -328,9 +453,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.city" />
         <item itemvalue="Python.intersection2" />
         <item itemvalue="Python.animate" />
-        <item itemvalue="Python.city" />
         <item itemvalue="Python.run" />
       </list>
     </recent_temporary>
@@ -380,23 +505,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="61" y="-8" width="1867" height="1096" extended-state="7" />
-    <editor active="true" />
+    <frame x="-6" y="0" width="1108" height="830" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4973357" visible="true" weight="0.10333516" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4973357" visible="true" weight="0.15499534" />
       <window_info id="Structure" order="1" sideWeight="0.50249374" side_tool="true" weight="0.12540895" />
       <window_info id="Favorites" order="2" sideWeight="0.5026643" side_tool="true" weight="0.17514871" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.50763357" visible="true" weight="0.24116424" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.50700283" weight="0.3558106" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4972737" weight="0.25987527" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49836424" weight="0.32848233" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.19750519" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49672845" weight="0.32744282" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.4923664" side_tool="true" weight="0.23804574" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.22765073" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49836424" weight="0.32711622" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.19655667" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49672845" weight="0.32624114" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.4929972" side_tool="true" weight="0.3558106" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.22695035" />
       <window_info anchor="bottom" id="Messages" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -405,13 +529,13 @@
       <window_info anchor="right" id="R Packages" order="4" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4973357" visible="true" weight="0.10294118" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4973357" visible="true" weight="0.17514871" />
       <window_info id="Structure" order="1" sideWeight="0.50249374" side_tool="true" weight="0.12540895" />
       <window_info id="Favorites" order="2" sideWeight="0.5026643" side_tool="true" weight="0.17514871" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.50763357" visible="true" weight="0.24116424" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4972737" weight="0.34927234" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4972737" weight="0.25987527" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49836424" weight="0.32848233" />
@@ -581,22 +705,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/city/city.py">
+    <entry file="file://$PROJECT_DIR$/city/City.kv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5552">
-          <caret line="2" column="36" lean-forward="true" selection-start-line="2" selection-start-column="36" selection-end-line="2" selection-end-column="36" />
-          <folding>
-            <marker date="1558189347056" expanded="true" signature="1405:1890" ph="..." />
-            <marker date="1558189347056" expanded="true" signature="26757:26762" ph="..." />
-            <marker date="1558189347056" expanded="true" signature="27245:27254" ph="..." />
-          </folding>
+        <state relative-caret-position="646">
+          <caret line="99" selection-start-line="99" selection-end-line="99" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/city/City.kv">
+    <entry file="file://$PROJECT_DIR$/city/city.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="80" column="29" selection-start-line="80" selection-start-column="29" selection-end-line="80" selection-end-column="29" />
+        <state relative-caret-position="448">
+          <caret line="696" column="70" selection-start-line="696" selection-start-column="69" selection-end-line="696" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <marker date="1558639992016" expanded="true" signature="29199:29208" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -19,7 +19,7 @@ global mode
 
 animDurInt = 0.3
 animDurRoad = 0.3
-mode = "Infinite"
+mode = "Daily"
 
 class Car(Widget):
     angle = NumericProperty(0)
@@ -96,6 +96,7 @@ class VertRoad(Widget):
                         carData = queue[direction][way][i]
                         nextCarData = queue[direction][way][i-1]
                         if carData != None:
+                            print(carData)
                             if carData[1] == "Waiting" and nextCarData == None:
                                 queue[direction][way][i] = None
                                 queue[direction][way][i - 1] = carData
@@ -120,6 +121,9 @@ class VertRoad(Widget):
 
     def doTurn(self, *largs):
         self.roadProg()
+
+    def getPos(self):
+        return self._pathAnim
 
 
 
@@ -226,6 +230,8 @@ class HorizRoad(Widget):
 
     def doTurn(self, *largs):
         self.roadProg()
+    def getPos(self):
+        return self._pathAnim
 
 class Grass(Widget):
     pass
@@ -515,9 +521,9 @@ class CityApp(App):
     global carId
 
     loaded = False
-    citySize = 11
+    citySize = 3
     roadWidth = 320
-    roadLength = 20
+    roadLength = 7
     ttLength = (int(citySize / 2) + citySize % 2) * roadWidth + int(citySize / 2) * roadLength * 40 * 2
     currentMat = []
     caseClasses = [[[] for j in range(citySize)] for i in range(citySize)]
@@ -552,41 +558,86 @@ class CityApp(App):
 
     def addCars(self, city):
         global carId
-        startPt = (randint(0, 3), randint(0, 1))
-        startCoord = [0, 0, 0, startPt[1]]
-        if startPt[0] == 0:
-            startCoord[1] = 2*randint(0, citySize//2)+1
-            startCoord[3] = 1 - startCoord[3]
-        elif startPt[0] == 1:
-            startCoord[0] = 2*randint(0, citySize//2)+1
-        elif startPt[0] == 2:
-            startCoord[0] = citySize+1
-            startCoord[1] = 2*randint(0, citySize//2)+1
-            startCoord[2] = 1
-        else:
-            startCoord[0] = 2*randint(0, citySize//2)+1
-            startCoord[1] = citySize + 1
-            startCoord[2] = 1
-            startCoord[3] = 1 - startCoord[3]
 
-        destination = []
-        if mode == "Infinite": destination.append((randint(0, 2), randint(0, 1)))
-        spawnPos = spawnCoord[startCoord[0]][startCoord[1]][startCoord[3]]
-        car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5, pos=spawnPos)
+        if mode == "Infinite":
+            startPt = (randint(0, 3), randint(0, 1))
+            startCoord = [0, 0, 0, startPt[1]]
+            if startPt[0] == 0:
+                startCoord[1] = 2*randint(0, citySize//2)+1
+                startCoord[3] = 1 - startCoord[3]
+            elif startPt[0] == 1:
+                startCoord[0] = 2*randint(0, citySize//2)+1
+            elif startPt[0] == 2:
+                startCoord[0] = citySize+1
+                startCoord[1] = 2*randint(0, citySize//2)+1
+                startCoord[2] = 1
+            else:
+                startCoord[0] = 2*randint(0, citySize//2)+1
+                startCoord[1] = citySize + 1
+                startCoord[2] = 1
+                startCoord[3] = 1 - startCoord[3]
 
-        if currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] == None:
-            currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] = [[carId, startPt, destination, car], "Waiting"]
-            city.add_widget(car)
-            carId += 1
+            destination = []
+            destination.append((randint(0, 2), randint(0, 1)))
+            spawnPos = spawnCoord[startCoord[0]][startCoord[1]][startCoord[3]]
+            car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5, pos=spawnPos)
+
+            if currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] == None:
+                currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] = [[carId, startPt, destination, car], "Waiting"]
+                city.add_widget(car)
+                carId += 1
+
+        if mode == "Daily":
+            isOdd = randint(0,1)
+            x = 2*randint(0, citySize//2-1) + isOdd
+            y = 2*randint(0, citySize//2-1) + 1-isOdd
+            dirRoad = randint(0,1)
+            wayRoad = randint(0,1)
+            if isOdd:
+                if dirRoad == 0: #vert road from top
+                    startPt = (0, wayRoad)
+                if dirRoad == 1: #vert road from bot
+                    startPt = (2, wayRoad)
+            else:
+                if dirRoad == 0: #horiz road from left
+                    startPt = (1, wayRoad)
+                if dirRoad == 1: #horiz road from right
+                    startPt = (3, wayRoad)
+
+            destination = []
+            numberInstr = randint(3, 10)
+            for i in range(numberInstr):
+                destination.append((randint(0, 2), randint(0, 1)))
+
+            spawnPoses = caseClasses[x][y].getPos()
+            i = 1
+            while i < roadLength - 1 and currentMat[x][y][dirRoad][wayRoad][i] != None:
+                print(i)
+                i += 1
+
+            if i < roadLength - 1:
+                spawnPos = spawnPoses[dirRoad][wayRoad][i]
+                car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5, pos=spawnPos)
+                currentMat[x][y][dirRoad][wayRoad][i] = [[carId, startPt, destination, car], "Waiting"]
+                print(currentMat[x][y][dirRoad][wayRoad])
+                city.add_widget(car)
+                carId += 1
+
 
     def doStuff(self, city, *largs):
         global timeC
         global doNextAnim
         if len(doNextAnim) == 0:
-            if timeC == 1:
-                for i in range(200): self.addCars(city)
-                timeC = 0
-            else: timeC += 1
+            if mode == "Infinite":
+                if timeC == 1:
+                    for i in range(200): self.addCars(city)
+                    timeC = 0
+                else: timeC += 1
+            elif mode == "Daily":
+                if timeC == 1:
+                    self.addCars(city)
+                    timeC += 1
+                else: timeC += 1
             for x in range(citySize):
                 for y in range(citySize):
                     if x%2 == 0 and y%2 == 0 or (x+y)%2 == 1:
