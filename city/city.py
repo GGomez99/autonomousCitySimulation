@@ -16,10 +16,30 @@ from kivy.core.window import Window
 global animDurRoad
 global animDurInt
 global mode
+global carId
+global time
+global carsOut
 
 animDurInt = 0.3
 animDurRoad = 0.3
 mode = "Daily"
+
+class Stats(BoxLayout):
+    def __init__(self, **kwargs):
+        super(Stats, self).__init__(**kwargs)
+
+        self.orientation = 'vertical'
+        self.nbrCars = Label()
+        self.modeTxt = Label()
+        self.tick = Label()
+        self.add_widget(self.modeTxt)
+        self.add_widget(self.nbrCars)
+        self.add_widget(self.tick)
+
+    def update(self):
+        self.nbrCars.text = str(carId-carsOut)
+        self.modeTxt.text = str(mode)
+        self.tick.text = str(time)
 
 class Car(Widget):
     angle = NumericProperty(0)
@@ -96,8 +116,9 @@ class VertRoad(Widget):
                         carData = queue[direction][way][i]
                         nextCarData = queue[direction][way][i-1]
                         if carData != None:
-                            print(carData)
-                            if carData[1] == "Waiting" and nextCarData == None:
+                            if i == roadLength//2 and len(carData[0][2]) == 0:
+                                queue[direction][way][i] = None
+                            elif carData[1] == "Waiting" and nextCarData == None:
                                 queue[direction][way][i] = None
                                 queue[direction][way][i - 1] = carData
                                 carData[1] = "Moving"
@@ -194,7 +215,9 @@ class HorizRoad(Widget):
                         carData = queue[direction][way][i]
                         nextCarData = queue[direction][way][i-1]
                         if carData != None:
-                            if carData[1] == "Waiting" and nextCarData == None:
+                            if i == roadLength//2 and len(carData[0][2]) == 0:
+                                queue[direction][way][i] = None
+                            elif carData[1] == "Waiting" and nextCarData == None:
                                 queue[direction][way][i] = None
                                 queue[direction][way][i - 1] = carData
                                 carData[1] = "Moving"
@@ -262,6 +285,8 @@ class Intersec(Widget):
     roadWidth = NumericProperty(0)
 
     def intersecProg(self):
+
+        global carsOut
 
         if loaded:
             inter = currentMat[self.xPos][self.yPos]
@@ -357,6 +382,11 @@ class Intersec(Widget):
                                 car[2].pop(0)
                                 if mode == "Infinite" and len(car[2]) == 0:
                                     car[2].append((randint(0, 2), randint(0, 1)))
+
+                                if (mode == "Daily" or mode == "Paused") and len(car[2]) == 0:        #fade off when destination reached
+                                    anim = Animation(opacity=0, duration=0.5)
+                                    anim.start(car[3])
+                                    carsOut -= 1
                                 #outQueue[carDest[0]][carDest[1]][roadLength-1][0] = [car, "Moving"]          # move car to outqueue if reach destination
                                 moveCar([car, "Moving"], outQueueAnim[carDest[0]][carDest[1]], animDurInt)
                             elif time != 0:
@@ -519,18 +549,24 @@ class CityApp(App):
     global doNextAnim
     global spawnCoord
     global carId
+    global time
+    global rateDaily
+    global carsOut
 
     loaded = False
-    citySize = 3
+    citySize = 21
     roadWidth = 320
     roadLength = 7
     ttLength = (int(citySize / 2) + citySize % 2) * roadWidth + int(citySize / 2) * roadLength * 40 * 2
     currentMat = []
     caseClasses = [[[] for j in range(citySize)] for i in range(citySize)]
     timeC = 0
+    carsOut = 0
+    time = 0
     doNextAnim = []
     spawnCoord = [{} for x in range(citySize+2)]
     carId = 0
+    rateDaily = 1
 
     Window.size = (750, 750)
 
@@ -555,6 +591,39 @@ class CityApp(App):
             spawnCoord[x][y] = [[], []]
             for i in range(2):
                 spawnCoord[x][y][i] = (roadWidth/2 + (y-1) * (roadLength*40 + roadWidth/2) - 140 + (1-i)*80 + x/(citySize+1)*160, (1 - x/(citySize+1)) * (ttLength + 80) - 60)
+
+    def __init__(self, **kwargs):
+        super(CityApp, self).__init__(**kwargs)
+        Window.bind(on_key_down=self._keydown)
+
+    def _keydown(self, *args):
+        global mode
+        global animDurRoad
+        global animDurInt
+        global rateDaily
+
+        print(args)
+
+        if args[3] == 'i':
+            mode = "Infinite"
+        elif args[3] == 'd':
+            mode = "Daily"
+        elif args[3] == 'p':
+            mode = "Paused"
+
+        elif args[1] == 274:
+            animDurInt += 0.1
+            animDurRoad += 0.1
+        elif args[1] == 273:
+            if animDurRoad > 0.1:
+                animDurInt -= 0.1
+                animDurRoad -= 0.1
+        elif args[1] == 275 and mode == "Daily":
+            rateDaily += 1
+        elif args[1] == 276 and mode == "Daily":
+            rateDaily -= 1
+
+        return True
 
     def addCars(self, city):
         global carId
@@ -593,16 +662,20 @@ class CityApp(App):
             y = 2*randint(0, citySize//2-1) + 1-isOdd
             dirRoad = randint(0,1)
             wayRoad = randint(0,1)
+            correctAngle = 0
             if isOdd:
                 if dirRoad == 0: #vert road from top
                     startPt = (0, wayRoad)
                 if dirRoad == 1: #vert road from bot
                     startPt = (2, wayRoad)
+                    correctAngle = 180
             else:
                 if dirRoad == 0: #horiz road from left
                     startPt = (1, wayRoad)
+                    correctAngle = 90
                 if dirRoad == 1: #horiz road from right
                     startPt = (3, wayRoad)
+                    correctAngle = 270
 
             destination = []
             numberInstr = randint(3, 10)
@@ -612,22 +685,27 @@ class CityApp(App):
             spawnPoses = caseClasses[x][y].getPos()
             i = 1
             while i < roadLength - 1 and currentMat[x][y][dirRoad][wayRoad][i] != None:
-                print(i)
                 i += 1
 
             if i < roadLength - 1:
                 spawnPos = spawnPoses[dirRoad][wayRoad][i]
-                car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5, pos=spawnPos)
-                currentMat[x][y][dirRoad][wayRoad][i] = [[carId, startPt, destination, car], "Waiting"]
-                print(currentMat[x][y][dirRoad][wayRoad])
+                car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5, pos=spawnPos, angle=correctAngle, opacity=0)
+                currentMat[x+1][y+1][dirRoad][wayRoad][i] = [[carId, startPt, destination, car], "Waiting"]
                 city.add_widget(car)
+
+                anim = Animation(opacity=1, duration=0.2)
+                anim.start(car)
                 carId += 1
 
 
-    def doStuff(self, city, *largs):
+    def doStuff(self, city, stats, *largs):
         global timeC
         global doNextAnim
+        global time
+
+        stats.update()
         if len(doNextAnim) == 0:
+            time += 1
             if mode == "Infinite":
                 if timeC == 1:
                     for i in range(200): self.addCars(city)
@@ -635,8 +713,9 @@ class CityApp(App):
                 else: timeC += 1
             elif mode == "Daily":
                 if timeC == 1:
-                    self.addCars(city)
-                    timeC += 1
+                    for i in range(rateDaily):
+                        self.addCars(city)
+                    timeC = 0
                 else: timeC += 1
             for x in range(citySize):
                 for y in range(citySize):
@@ -651,6 +730,7 @@ class CityApp(App):
         global loaded
 
         city = BoxLayout(orientation='vertical', size=(ttLength, ttLength), size_hint=(None, None))
+        window = Widget(size_hint=(1, 1))
 
         for x in range(0, citySize):
             row = BoxLayout(orientation='horizontal', size=(ttLength, roadWidth * abs(x%2-1) + roadLength * 40 * 2 * (x%2)), size_hint=(None, None))
@@ -691,11 +771,13 @@ class CityApp(App):
                     row.add_widget(Grass(size=(roadLength*40*2, roadLength*40*2)))
             city.add_widget(row)
         loaded = True
-
-        scatter = Scatter(do_rotation=False, scale=0.5)
+        scatter = Scatter(do_rotation=False, scale=0.5, auto_bring_to_front=False, size=(ttLength, ttLength))
         scatter.add_widget(city)
-        Clock.schedule_interval(partial(self.doStuff, scatter), 1/120)
-        return scatter
+        statWidget = Stats()
+        window.add_widget(statWidget, 0)
+        window.add_widget(scatter, 1)
+        Clock.schedule_interval(partial(self.doStuff, scatter, statWidget), 1/120)
+        return window
 
 
 if __name__ == '__main__':
