@@ -24,22 +24,25 @@ animDurInt = 0.3
 animDurRoad = 0.3
 mode = "Daily"
 
+class StatLabel(Label):
+    pass
+
 class Stats(BoxLayout):
     def __init__(self, **kwargs):
         super(Stats, self).__init__(**kwargs)
 
         self.orientation = 'vertical'
-        self.nbrCars = Label()
-        self.modeTxt = Label()
-        self.tick = Label()
+        self.nbrCars = StatLabel()
+        self.modeTxt = StatLabel()
+        self.tick = StatLabel()
         self.add_widget(self.modeTxt)
         self.add_widget(self.nbrCars)
         self.add_widget(self.tick)
 
     def update(self):
-        self.nbrCars.text = str(carId-carsOut)
+        self.nbrCars.text = "Cars in : " + str(carId-carsOut)
         self.modeTxt.text = str(mode)
-        self.tick.text = str(time)
+        self.tick.text = "Time : " + str(time)
 
 class Car(Widget):
     angle = NumericProperty(0)
@@ -386,7 +389,7 @@ class Intersec(Widget):
                                 if (mode == "Daily" or mode == "Paused") and len(car[2]) == 0:        #fade off when destination reached
                                     anim = Animation(opacity=0, duration=0.5)
                                     anim.start(car[3])
-                                    carsOut -= 1
+                                    carsOut += 1
                                 #outQueue[carDest[0]][carDest[1]][roadLength-1][0] = [car, "Moving"]          # move car to outqueue if reach destination
                                 moveCar([car, "Moving"], outQueueAnim[carDest[0]][carDest[1]], animDurInt)
                             elif time != 0:
@@ -554,9 +557,9 @@ class CityApp(App):
     global carsOut
 
     loaded = False
-    citySize = 21
+    citySize = 11
     roadWidth = 320
-    roadLength = 7
+    roadLength = 14
     ttLength = (int(citySize / 2) + citySize % 2) * roadWidth + int(citySize / 2) * roadLength * 40 * 2
     currentMat = []
     caseClasses = [[[] for j in range(citySize)] for i in range(citySize)]
@@ -658,8 +661,8 @@ class CityApp(App):
 
         if mode == "Daily":
             isOdd = randint(0,1)
-            x = 2*randint(0, citySize//2-1) + isOdd
-            y = 2*randint(0, citySize//2-1) + 1-isOdd
+            x = 2*randint(isOdd, citySize//2) - isOdd
+            y = 2*randint(1-isOdd, citySize//2) - 1+isOdd
             dirRoad = randint(0,1)
             wayRoad = randint(0,1)
             correctAngle = 0
@@ -684,7 +687,7 @@ class CityApp(App):
 
             spawnPoses = caseClasses[x][y].getPos()
             i = 1
-            while i < roadLength - 1 and currentMat[x][y][dirRoad][wayRoad][i] != None:
+            while i < roadLength - 1 and currentMat[x+1][y+1][dirRoad][wayRoad][i] != None:
                 i += 1
 
             if i < roadLength - 1:

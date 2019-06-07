@@ -1,5 +1,6 @@
 import kivy
 
+from kivy.uix.label import Label
 from kivy.animation import Animation
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -24,8 +25,31 @@ intersec path[pos]:
              |   2|
 '''
 
+global carsPassed
+global timeC
+global mode
+global switchTimer
+global nbrCars
+nbrCars = 3
+mode = "trafficLights"
+trafPara = 20
+switchTimer = 0
+carsPassed = [0,0,0]
+timeC = 0
+
 class BG(Widget):
-    pass
+    def __init__(self, **kwargs):
+        super(BG, self).__init__(**kwargs)
+
+        self.nbrCars = Label()
+        self.tick = Label()
+        self.add_widget(self.nbrCars)
+        self.add_widget(self.tick)
+        self.nbrCars.y = 20
+
+    def update(self, *largs):
+        self.nbrCars.text = "Cars in : " + str(carsPassed[0])
+        self.tick.text = "Time : " + str(timeC)
 
 class Car(Widget):
     angle = NumericProperty(0)
@@ -50,21 +74,18 @@ class Inter2App(App):
 
     def intersecProg(self, layout, inQueue, outQueue, inter1, *largs):
 
+        global carsPassed
+        global timeC
+        global switchTimer
+
         c = Window.center
         c = [c[0] - 20, c[1] - 20]
         nbrWays = 2
-        animDur = 0.3
+        animDur = 0
         roadAlign = 40
         dirToTake = ((1, 0), (0, 1), (-1, 0), (0, -1))
         startPos = (((0, 0), (0, 1)), ((3, 0), (2, 0)), ((3, 3), (3, 2)), ((0, 3), (1, 3)))
         endPos = (((0, 3), (0, 2)), ((0, 0), (1, 0)), ((3, 0), (3, 1)), ((3, 3), (2, 3)))
-        ttCarsOut = 0
-        ttCarsIn = 0
-
-        for i in range(0, 4):
-            for j in range(0, 1):
-                ttCarsOut = ttCarsOut + len(outQueue[i][j])
-                ttCarsIn = ttCarsIn + len(inQueue[i][j])
 
         pathAnim = [
             ((c[0] - roadAlign * 3, c[1] + roadAlign * 3), (c[0] - roadAlign, c[1] + roadAlign * 3), (c[0] + roadAlign, c[1] + roadAlign * 3), (c[0] + roadAlign * 3, c[1] + roadAlign * 3)),
@@ -86,8 +107,7 @@ class Inter2App(App):
         ]
 
 
-        nbrCars = sum([len(way) for way in inQueue])
-        def moveCar(car, futurePos, ttDur):
+        def moveCar(car, futurePos, ttDur, layout, doRemove):
             oldPos = car[3].pos[:]
             angle = car[3].angle
             movex, movey = futurePos[0] - oldPos[0], futurePos[1] - oldPos[1]
@@ -107,7 +127,7 @@ class Inter2App(App):
                 anim = Animation(pos=futurePos, duration=ttDur-dur)
                 doNextMoveF.append(False)
                 anim.start(largs[1])
-                anim.bind(on_complete=partial(popNextMoveF))
+                anim.bind(on_complete=partial(popNextMoveF, doRemove, layout))
 
             dur = ttDur*0.1
             if correctAngle == angle: dur = 0
@@ -129,10 +149,25 @@ class Inter2App(App):
             else:
                 return False
 
-        def popNextMoveF(anim, widget):
+        def popNextMoveF(bool, layout, *largs):
+            if bool: layout.remove_widget(largs[1])
             doNextMoveF.pop()
 
+
         if len(doNextMoveF)+len(doNextMoveR) == 0:
+            # adding cars
+            for i in range(1, nbrCars + 1):
+                startPt = (randint(0, 3), randint(0, 1))
+                destination = (randint(0, 2), randint(0, 1))
+                if len(inQueue[startPt[0]][startPt[1]]) <= 10:
+                    inQueue[startPt[0]][startPt[1]].append([[i, startPt, destination, Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5)], -1])
+
+            # update stats
+            timeC += 1
+            if timeC % 100 == 0:
+                carsPassed[2] = (carsPassed[2]*(timeC//100-1) + carsPassed[0]-carsPassed[1])/(timeC//100)
+                print(carsPassed[2]/100)
+                carsPassed[1] = carsPassed[0]
             # move by 1 every car
             for x in range(0, nbrWays*2):
                 for y in range(0, nbrWays * 2):
@@ -141,15 +176,17 @@ class Inter2App(App):
                         for time, car in inter1[x][y].items():
                             carDest = ((car[1][0] + car[2][0] + 1) % 4, car[2][1])
                             if endPos[carDest[0]][carDest[1]] == (x, y) and time == 0:
-                                outQueue[carDest[0]][carDest[1]].append(car)            # move car to outqueue if reach destination
-                                moveCar(car, outQueueAnim[carDest[0]][carDest[1]], animDur)
+                                #outQueue[carDest[0]][carDest[1]].append(car)            # move car to outqueue if reach destination
+                                moveCar(car, outQueueAnim[carDest[0]][carDest[1]], animDur, layout, True)
+                                carsPassed[0] += 1
                             elif time != 0:
                                 newInterCase.update({time - 1: car})                    # move by 1 on timeline in case
                         inter1[x][y] = newInterCase                                     # change the state of the case
                         if 0 in inter1[x][y]:
-                            moveCar(newInterCase[0], pathAnim[x][y], animDur)
-            newInQueue = []
-            for road in inQueue:                         # remove or reduce timer for cars in inqueue
+                            moveCar(newInterCase[0], pathAnim[x][y], animDur, layout, False)
+
+            for j in range(0, len(inQueue)):                         # remove or reduce timer for cars in inqueue
+                road = inQueue[j]
                 newRoad = []
                 for way in road:
                     itemToKeep = []
@@ -160,13 +197,26 @@ class Inter2App(App):
                                 item[1] -= 1
                             itemToKeep.append(item)
                     newRoad.append(itemToKeep[:])
-                newInQueue.append(newRoad[:])
-            inQueue = newInQueue[:]
+                inQueue[j] = newRoad[:]
 
             # take care of queue (add paths for cars)
-            for road in range(0, 4):
+            if mode == "trafficLights":
+                if switchTimer <= trafPara:
+                    roadList = [0, 2]
+                elif switchTimer == trafPara*2+1:
+                    switchTimer = 0
+                    roadList = [0, 2]
+                else: roadList = [1, 3]
+                switchTimer += 1
+            else:
+                roadList = range(0, 4)
+
+            for road in roadList:
                 for way in range(0, nbrWays):
-                    for carIndex in range(0, len(inQueue[road][way])):
+                    if mode == "trafficLights": maxListIndex = min(len(inQueue[road][way]), 1)
+                    else: maxListIndex = len(inQueue[road][way])
+
+                    for carIndex in range(0, maxListIndex):
                         if inQueue[road][way][carIndex][1] == -1:
                             car = inQueue[road][way][carIndex][0]
                             doNotPath = True
@@ -255,7 +305,7 @@ class Inter2App(App):
                             anim &= Animation(angle=90 * car[1][0], duration=0)
                             doNextMoveF.append(False)
                             anim.start(car[3])
-                            anim.bind(on_complete=partial(popNextMoveF))
+                            anim.bind(on_complete=partial(popNextMoveF, False))
 
             '''print("This move:")
             for i in range(0, 4):
@@ -275,16 +325,13 @@ class Inter2App(App):
             [{}, {}, {}, {}]
         ]
         outQueue = [[[], []], [[], []], [[], []], [[], []]]
-        nbrCars = 400
-        for i in range(1, nbrCars + 1):
-            startPt = (randint(0, 3), randint(0, 1))
-            destination = (randint(0, 2), randint(0, 1))
-            inQueue[startPt[0]][startPt[1]].append([[i, startPt, destination, Car(r=random()*0.4+0.5, g=random()*0.4+0.5, b=random()*0.4+0.5)], -1])
 
         layout = Layout()
-        layout.add_widget(BG())
+        mainBG = BG()
+        layout.add_widget(mainBG)
 
         Clock.schedule_interval(partial(self.intersecProg, layout, inQueue, outQueue, inter1), 1/80)
+        Clock.schedule_interval(mainBG.update, 1 / 80)
         return layout
 
 
