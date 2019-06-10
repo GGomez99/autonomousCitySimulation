@@ -1,4 +1,6 @@
 import kivy
+from kivy.config import Config
+Config.set('modules', 'monitor', '')
 
 from kivy.animation import Animation
 from kivy.app import App
@@ -12,6 +14,11 @@ from random import randint
 from random import random
 from functools import partial
 from kivy.core.window import Window
+
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
+import threading
+import sys
 
 global animDurRoad
 global animDurInt
@@ -33,14 +40,17 @@ class Stats(BoxLayout):
 
         self.orientation = 'vertical'
         self.nbrCars = StatLabel()
+        self.carsPassed = StatLabel()
         self.modeTxt = StatLabel()
         self.tick = StatLabel()
         self.add_widget(self.modeTxt)
         self.add_widget(self.nbrCars)
+        self.add_widget(self.carsPassed)
         self.add_widget(self.tick)
 
     def update(self):
         self.nbrCars.text = "Cars in : " + str(carId-carsOut)
+        self.carsPassed.text = "Cars passed : " + str(carsOut)
         self.modeTxt.text = str(mode)
         self.tick.text = "Time : " + str(time)
 
@@ -96,13 +106,14 @@ class VertRoad(Widget):
     def move(self, carData, futurePos, dur):
         car = carData[0][3]
         def onFinish(carData, anim, widget, *largs):
-            doNextAnim.pop()
+            #doNextAnim.pop()
             carData[1] = "Waiting"
 
-        anim = Animation(pos=futurePos, duration=dur)
-        doNextAnim.append(False)
-        anim.start(car)
-        anim.bind(on_complete=partial(onFinish, carData))
+        #anim = Animation(pos=futurePos, duration=dur)
+        #doNextAnim.append(False)
+        #anim.start(car)
+        #anim.bind(on_complete=partial(onFinish, carData))
+        onFinish(carData, "", "")
 
 
     def roadProg(self):
@@ -196,13 +207,14 @@ class HorizRoad(Widget):
     def move(self, carData, futurePos, dur):
         car = carData[0][3]
         def onFinish(carData, anim, widget, *largs):
-            doNextAnim.pop()
+            #doNextAnim.pop()
             carData[1] = "Waiting"
 
-        anim = Animation(pos=futurePos, duration=dur)
-        doNextAnim.append(False)
-        anim.start(car)
-        anim.bind(on_complete=partial(onFinish, carData))
+        #anim = Animation(pos=futurePos, duration=dur)
+        #doNextAnim.append(False)
+        #anim.start(car)
+        #anim.bind(on_complete=partial(onFinish, carData))
+        onFinish(carData, "", "")
 
 
     def roadProg(self):
@@ -265,7 +277,7 @@ class Grass(Widget):
 class Intersec(Widget):
 
     '''
-    car model : [id, where come from, where to go]
+    car model : [id, where come from, where to go, widget]
     where to go: (turns, nbr way(0 or 1))
     turns: forward(1),right(0),left(2)
     intersec path[pos]:
@@ -287,9 +299,10 @@ class Intersec(Widget):
     yPos = NumericProperty(0)
     roadWidth = NumericProperty(0)
 
-    def intersecProg(self):
+    def intersecProg(self, city):
 
         global carsOut
+        global carsStats
 
         if loaded:
             inter = currentMat[self.xPos][self.yPos]
@@ -340,62 +353,70 @@ class Intersec(Widget):
                 else:
                     correctAngle = 180
 
-                def forwardAnim(futurePos, dur, carData, *largs):
-                    doNextAnim.pop()
-                    anim = Animation(pos=futurePos, duration=ttDur-dur)
-                    doNextAnim.append(False)
-                    anim.start(largs[1])
-                    anim.bind(on_complete=partial(onFinish, carData))
+                #def forwardAnim(futurePos, dur, carData, *largs):
+                    #doNextAnim.pop()
+                    #anim = Animation(pos=futurePos, duration=ttDur-dur)
+                    #doNextAnim.append(False)
+                    #anim.start(largs[1])
+                    #anim.bind(on_complete=partial(onFinish, carData))
 
                 dur = ttDur*0.1
                 if correctAngle == angle: dur = 0
-                doNextAnim.append(False)
-                rotat = Animation(angle=correctAngle, duration=dur)
-                rotat.start(car[3])
-                rotat.bind(on_complete=partial(forwardAnim, futurePos, dur, carData))
+                #doNextAnim.append(False)
+                #rotat = Animation(angle=correctAngle, duration=dur)
+                #rotat.start(car[3])
+                #rotat.bind(on_complete=partial(forwardAnim, futurePos, dur, carData))
+                onFinish(carData, "", "")
 
 
-            def checkPass(currentPos, posToGo, time):
-                if time in inter[posToGo[0]][posToGo[1]]:
-                    potBlocCar = inter[posToGo[0]][posToGo[1]][time][0]
+            def checkPass(currentPos, posToGo, keytime):
+                if keytime in inter[posToGo[0]][posToGo[1]]:
+                    potBlocCar = inter[posToGo[0]][posToGo[1]][keytime][0]
                     if potBlocCar[2][0] == 1 and potBlocCar[1][1] != potBlocCar[2][1]:  # check if goes forward and changes way
-                        if (time+1) in inter[currentPos[0]][currentPos[1]]:
-                            if potBlocCar[0] == inter[currentPos[0]][currentPos[1]][time+1][0]: # check if that car goes where you are
+                        if (keytime+1) in inter[currentPos[0]][currentPos[1]]:
+                            if potBlocCar[0] == inter[currentPos[0]][currentPos[1]][keytime+1][0]: # check if that car goes where you are
                                 return True
-                if (time + 1) in inter[posToGo[0]][posToGo[1]]:
+                if (keytime + 1) in inter[posToGo[0]][posToGo[1]]:
                     return True
                 else:
                     return False
 
             def onFinish(carData, anim, widget, *largs):
-                doNextAnim.pop()
+                #doNextAnim.pop()
                 carData[1] = "Waiting"
 
+            def removeCar(car, city, *largs):
+                city.remove_widget(car)
 
             # move by 1 every car
             for x in range(0, nbrWays*2):
                 for y in range(0, nbrWays * 2):
                     newInterCase = {}
                     if inter[x][y] != {0: []}:
-                        for time, carData in inter[x][y].items():
+                        for keytime, carData in inter[x][y].items():
                             car = carData[0]
                             carDest = ((car[1][0] + car[2][0][0] + 1) % 4, car[2][0][1])
-                            if endPos[carDest[0]][carDest[1]] == (x, y) and time == 0:
+                            if endPos[carDest[0]][carDest[1]] == (x, y) and keytime == 0:
                                 car[1] = ((carDest[0] + 2) % 4, carDest[1])
                                 car[2].pop(0)
                                 if mode == "Infinite" and len(car[2]) == 0:
                                     car[2].append((randint(0, 2), randint(0, 1)))
 
-                                if (mode == "Daily" or mode == "Paused") and len(car[2]) == 0:        #fade off when destination reached
-                                    anim = Animation(opacity=0, duration=0.5)
-                                    anim.start(car[3])
+                                # fade off and remove car when destination reached
+                                posRoadDest = [(self.xPos - 1, self.yPos), (self.xPos, self.yPos - 1), (self.xPos + 1, self.yPos), (self.xPos, self.yPos + 1)]
+                                if ((mode == "Daily" or mode == "Paused") and len(car[2]) == 0) or (posRoadDest[carDest[0]][0] in [0, citySize+1]) or (posRoadDest[carDest[0]][1] in [0, citySize+1]):
+                                    carsStats[car[0]] = (carsStats[car[0]][0] - len(car[2]), time - carsStats[car[0]][1], True)
+
+                                    #anim = Animation(opacity=0, duration=0.5)
+                                    #anim.bind(on_complete=partial(removeCar, car[3], city))
+                                    #anim.start(car[3])
                                     carsOut += 1
                                 #outQueue[carDest[0]][carDest[1]][roadLength-1][0] = [car, "Moving"]          # move car to outqueue if reach destination
                                 moveCar([car, "Moving"], outQueueAnim[carDest[0]][carDest[1]], animDurInt)
-                            elif time != 0:
+                            elif keytime != 0:
                                 state = "futurePos"
-                                if time == 1: state = "Waiting"
-                                newInterCase.update({time - 1: [car, state]})                    # move by 1 on timeline in case
+                                if keytime == 1: state = "Waiting"
+                                newInterCase.update({keytime - 1: [car, state]})                    # move by 1 on timeline in case
                         inter[x][y] = newInterCase                                     # change the state of the case
                         if 0 in inter[x][y]:
                             newInterCase[0][1] = "Moving"
@@ -535,8 +556,8 @@ class Intersec(Widget):
                         list.append(str(key)+": "+str(item[0]))
                     print(list)'''
 
-    def doTurn(self, *largs):
-        self.intersecProg()
+    def doTurn(self, city, *largs):
+        self.intersecProg(city)
 
 
 class CityApp(App):
@@ -553,13 +574,16 @@ class CityApp(App):
     global spawnCoord
     global carId
     global time
-    global rateDaily
+    global rate
     global carsOut
+    global carsStats
+    global doGraph
+    global doWrite
 
     loaded = False
-    citySize = 11
+    citySize = 23
     roadWidth = 320
-    roadLength = 14
+    roadLength = 39
     ttLength = (int(citySize / 2) + citySize % 2) * roadWidth + int(citySize / 2) * roadLength * 40 * 2
     currentMat = []
     caseClasses = [[[] for j in range(citySize)] for i in range(citySize)]
@@ -569,7 +593,11 @@ class CityApp(App):
     doNextAnim = []
     spawnCoord = [{} for x in range(citySize+2)]
     carId = 0
-    rateDaily = 1
+    if len(sys.argv) == 2: rate = int(sys.argv[1])
+    else: rate = 1.7843574888403457
+    carsStats = []
+    doGraph = True
+    doWrite = True
 
     Window.size = (750, 750)
 
@@ -603,7 +631,8 @@ class CityApp(App):
         global mode
         global animDurRoad
         global animDurInt
-        global rateDaily
+        global rate
+        global doGraph
 
         print(args)
 
@@ -622,14 +651,18 @@ class CityApp(App):
                 animDurInt -= 0.1
                 animDurRoad -= 0.1
         elif args[1] == 275 and mode == "Daily":
-            rateDaily += 1
+            rate += 1
         elif args[1] == 276 and mode == "Daily":
-            rateDaily -= 1
+            rate -= 1
+        elif args[3] == 'g':
+            doGraph = not(doGraph)
 
         return True
 
     def addCars(self, city):
         global carId
+        global carsStats
+        global doWrite
 
         if mode == "Infinite":
             startPt = (randint(0, 3), randint(0, 1))
@@ -656,7 +689,8 @@ class CityApp(App):
 
             if currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] == None:
                 currentMat[startCoord[0]][startCoord[1]][startCoord[2]][startPt[1]][0] = [[carId, startPt, destination, car], "Waiting"]
-                city.add_widget(car)
+                #city.add_widget(car)
+                carsStats.append((len(destination), time, False))
                 carId += 1
 
         if mode == "Daily":
@@ -681,7 +715,7 @@ class CityApp(App):
                     correctAngle = 270
 
             destination = []
-            numberInstr = randint(3, 10)
+            numberInstr = randint(15, 45)
             for i in range(numberInstr):
                 destination.append((randint(0, 2), randint(0, 1)))
 
@@ -694,12 +728,48 @@ class CityApp(App):
                 spawnPos = spawnPoses[dirRoad][wayRoad][i]
                 car = Car(r=random() * 0.4 + 0.5, g=random() * 0.4 + 0.5, b=random() * 0.4 + 0.5, pos=spawnPos, angle=correctAngle, opacity=0)
                 currentMat[x+1][y+1][dirRoad][wayRoad][i] = [[carId, startPt, destination, car], "Waiting"]
-                city.add_widget(car)
+                carsStats.append((len(destination), time, False))
+                #city.add_widget(car)
 
                 anim = Animation(opacity=1, duration=0.2)
                 anim.start(car)
                 carId += 1
 
+
+    def statGraph(self, *largs):
+
+        global doWrite
+        global rate
+        global carsOut
+
+        rateList = [1.7843574888403457, 1.228749168961915, 0.8761515813467565, 0.8601244182733404, 1.196694842815082, 1.7416183873112356, 2.516264602526356, 2.8314654763035425, 2.900916516288347, 3.0291338208756775, 3.1466663500807295, 3.269541266976921, 3.4191281223288064, 3.600769303827525, 3.696932282268022, 4.151035236014816, 4.060214645265457, 4.022817931427487, 4.017475543736348, 3.8999430145312948]
+        if doGraph:
+            if time % 9000 == 0:
+                data = carsStats[:]
+                table = [[0, 0] for i in range(45)]
+                for car in data:
+                    if car[2]:
+                        table[car[0] - 1][0] += car[1]
+                        table[car[0] - 1][1] += 1
+
+                file = open("currentMat.txt", "a")
+                file.write("For rate = " + str(rate) + " : " + str([ttTime/(1+ttCars) for ttTime,ttCars in table]) + "\n")
+                file.write("   Cars out : " + str(carsOut) + "\n")
+                file.close()
+                print("update rate")
+
+                carsOut = 0
+                rate = rateList[time//9000]
+
+                #plt.bar([i for i in range(45)], [ttTime/(1+ttCars) for ttTime,ttCars in table], color="lightblue")
+                #plt.draw()
+
+    def initGraph(self, *largs):
+        graph = plt.bar([], [], color="lightblue")
+        rateLabel = mpatches.Patch(color="lightblue", label="rate = " + str(rate))
+        plt.legend(handles=[rateLabel])
+        Clock.schedule_interval(self.statGraph, 0.01)
+        #plt.show()
 
     def doStuff(self, city, stats, *largs):
         global timeC
@@ -709,21 +779,23 @@ class CityApp(App):
         stats.update()
         if len(doNextAnim) == 0:
             time += 1
+            print(rate)
             if mode == "Infinite":
-                if timeC == 1:
-                    for i in range(200): self.addCars(city)
+                if timeC == 10:
+                    for i in range(int(rate*10)): self.addCars(city)
                     timeC = 0
                 else: timeC += 1
             elif mode == "Daily":
                 if timeC == 1:
-                    for i in range(rateDaily):
+                    for i in range(int(rate*10)):
                         self.addCars(city)
                     timeC = 0
                 else: timeC += 1
             for x in range(citySize):
                 for y in range(citySize):
                     if x%2 == 0 and y%2 == 0 or (x+y)%2 == 1:
-                        caseClasses[x][y].doTurn(doNextAnim)
+                        caseClasses[x][y].doTurn(city)
+
 
     '''def status(self, dt):
         print("status : " + str(currentMat[2][3]))'''
@@ -780,6 +852,7 @@ class CityApp(App):
         window.add_widget(statWidget, 0)
         window.add_widget(scatter, 1)
         Clock.schedule_interval(partial(self.doStuff, scatter, statWidget), 1/120)
+        threading.Thread(target=self.initGraph).start()
         return window
 
 

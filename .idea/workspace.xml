@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c9245f6-1c31-460d-b3de-9bb7144fdd2a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/city/currentMat.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/city/graphs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/currentMat.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Tipe.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tipe.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Inter2/intersection2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Inter2/intersection2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city/City.kv" beforeDir="false" afterPath="$PROJECT_DIR$/city/City.kv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/city/city.py" beforeDir="false" afterPath="$PROJECT_DIR$/city/city.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,12 +20,13 @@
     <session id="-434417464">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="23" />
+          <entry key="project.closed" value="24" />
           <entry key="project.open.time.0" value="2" />
-          <entry key="project.open.time.13" value="2" />
+          <entry key="project.open.time.12" value="1" />
+          <entry key="project.open.time.13" value="3" />
           <entry key="project.open.time.14" value="2" />
           <entry key="project.open.time.15" value="1" />
-          <entry key="project.open.time.16" value="2" />
+          <entry key="project.open.time.16" value="3" />
           <entry key="project.open.time.17" value="2" />
           <entry key="project.open.time.19" value="2" />
           <entry key="project.open.time.2" value="1" />
@@ -34,34 +36,35 @@
           <entry key="project.open.time.36" value="1" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="26" />
+          <entry key="project.opened" value="29" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="kv" value="3" />
-          <entry key="py" value="21" />
+          <entry key="py" value="28" />
+          <entry key="txt" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="PLAIN_TEXT" value="3" />
-          <entry key="Python" value="21" />
+          <entry key="PLAIN_TEXT" value="10" />
+          <entry key="Python" value="28" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="Python Console" value="600" />
+          <entry key="Python Console" value="764" />
           <entry key="dummy" value="4" />
           <entry key="kv" value="2402" />
-          <entry key="py" value="27746" />
-          <entry key="txt" value="107" />
+          <entry key="py" value="31217" />
+          <entry key="txt" value="117" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="2513" />
-          <entry key="Python" value="28346" />
+          <entry key="PLAIN_TEXT" value="2523" />
+          <entry key="Python" value="31981" />
         </counts>
       </usages-collector>
     </session>
@@ -125,12 +128,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/city/city.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="771" column="21" lean-forward="true" selection-start-line="771" selection-start-column="21" selection-end-line="771" selection-end-column="21" />
+            <state relative-caret-position="582">
+              <caret line="771" column="19" lean-forward="true" selection-start-line="771" selection-start-column="19" selection-end-line="771" selection-end-column="19" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <marker date="1559759688968" expanded="true" signature="578:589" ph="..." />
+                <marker date="1560190894544" expanded="true" signature="13378:13399" ph="..." />
+                <marker date="1560190894544" expanded="true" signature="14924:14978" ph="..." />
+                <marker date="1560190894544" expanded="true" signature="34032:34038" ph="..." />
+                <marker date="1560190894544" expanded="true" signature="34895:34904" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/city/currentMat.txt">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/city/graphs.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="219">
+              <caret line="46" column="17" lean-forward="true" selection-start-line="46" selection-start-column="17" selection-end-line="46" selection-end-column="406" />
             </state>
           </provider>
         </entry>
@@ -138,12 +158,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Inter2/intersection2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
+            <state relative-caret-position="17">
               <caret line="32" column="11" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-                <marker date="1559757479505" expanded="true" signature="1774:1784" ph="..." />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -151,21 +167,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/city/City.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1360">
-              <caret line="80" column="12" selection-start-line="80" selection-start-column="12" selection-end-line="80" selection-end-column="12" />
+            <state relative-caret-position="705">
+              <caret line="88" column="28" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Inter1</find>
-      <find>layout</find>
-      <find>roadWidth</find>
-      <find>inter</find>
-      <find>queue</find>
       <find>roadLength</find>
       <find>_roadCases</find>
       <find>self._roadCases</find>
@@ -178,7 +196,6 @@
       <find>inQueue</find>
       <find>nbrcar</find>
       <find>car[2]</find>
-      <find>print</find>
       <find>blockingTime</find>
       <find>17</find>
       <find>doNextAnimR</find>
@@ -187,6 +204,16 @@
       <find>moveCar</find>
       <find>popNextMove</find>
       <find>nbrCars</find>
+      <find>doTurn</find>
+      <find>print</find>
+      <find>yime</find>
+      <find>time</find>
+      <find>rateDaily</find>
+      <find>statGraph</find>
+      <find>doNextMove</find>
+      <find>doNextAnim</find>
+      <find>onFinish</find>
+      <find>+</find>
     </findStrings>
     <replaceStrings>
       <replace>self.inter</replace>
@@ -198,6 +225,8 @@
       <replace>currentMat</replace>
       <replace>5</replace>
       <replace>dest</replace>
+      <replace>keytime</replace>
+      <replace>,</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -219,14 +248,18 @@
         <option value="$PROJECT_DIR$/Inter2/Inter2.kv" />
         <option value="$PROJECT_DIR$/city/City.kv" />
         <option value="$PROJECT_DIR$/Inter2/intersection2.py" />
+        <option value="$PROJECT_DIR$/currentMat.txt" />
+        <option value="$PROJECT_DIR$/city/graphs.py" />
         <option value="$PROJECT_DIR$/city/city.py" />
+        <option value="$PROJECT_DIR$/city/currentMat.txt" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="width" value="1385" />
-    <option name="height" value="1040" />
+    <option name="x" value="2065" />
+    <option name="y" value="-21" />
+    <option name="width" value="1871" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -239,18 +272,13 @@
         <subPane>
           <expand>
             <path>
-              <item name="autonomousCitySimulation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autonomousCitySimulation" type="462c0819:PsiDirectoryNode" />
+              <item name="Tipe" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Tipe" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="autonomousCitySimulation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autonomousCitySimulation" type="462c0819:PsiDirectoryNode" />
+              <item name="Tipe" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Tipe" type="462c0819:PsiDirectoryNode" />
               <item name="city" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="autonomousCitySimulation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autonomousCitySimulation" type="462c0819:PsiDirectoryNode" />
-              <item name="Inter2" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -326,6 +354,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="graphs" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Tipe" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/city" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/city/graphs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="intersection2" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tipe" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -373,10 +422,12 @@
       <item itemvalue="Python.animate" />
       <item itemvalue="Python.intersection2" />
       <item itemvalue="Python.city" />
+      <item itemvalue="Python.graphs" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.city" />
+        <item itemvalue="Python.graphs" />
         <item itemvalue="Python.intersection2" />
         <item itemvalue="Python.animate" />
         <item itemvalue="Python.run" />
@@ -435,22 +486,44 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4973357" visible="true" weight="0.11275168" />
-      <window_info id="Structure" order="1" sideWeight="0.50249374" side_tool="true" weight="0.12540895" />
-      <window_info id="Favorites" order="2" sideWeight="0.5026643" side_tool="true" weight="0.17514871" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4960733" visible="true" weight="0.17217484" />
+      <window_info id="Structure" order="1" sideWeight="0.5039267" side_tool="true" weight="0.1770891" />
+      <window_info id="Favorites" order="2" sideWeight="0.5039267" side_tool="true" weight="0.1770891" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.50700283" weight="0.26666668" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.50700283" visible="true" weight="0.2058212" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4972737" weight="0.25987527" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49836424" weight="0.32640332" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.1933472" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.4929972" side_tool="true" weight="0.3558106" />
+      <window_info anchor="bottom" id="Python Console" order="9" weight="0.42515594" />
+      <window_info anchor="bottom" id="Messages" order="10" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="R Graphics" order="3" />
+      <window_info anchor="right" id="R Packages" order="4" />
+      <window_info anchor="right" id="Terminal" order="5" sideWeight="0.49672845" side_tool="true" visible="true" weight="0.23400854" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4960733" visible="true" weight="0.17874931" />
+      <window_info id="Structure" order="1" sideWeight="0.5039267" side_tool="true" weight="0.1770891" />
+      <window_info id="Favorites" order="2" sideWeight="0.5039267" side_tool="true" weight="0.1770891" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.50700283" visible="true" weight="0.2058212" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4972737" weight="0.25987527" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49836424" weight="0.32711622" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.19432624" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.1933472" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.4929972" side_tool="true" weight="0.3558106" />
-      <window_info anchor="bottom" id="Python Console" order="9" weight="0.22695035" />
+      <window_info anchor="bottom" id="Python Console" order="9" weight="0.22661123" />
       <window_info anchor="bottom" id="Messages" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -458,28 +531,6 @@
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="right" id="R Packages" order="4" />
       <window_info anchor="right" id="Terminal" order="5" sideWeight="0.49672845" side_tool="true" weight="0.45515266" />
-    </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4973357" visible="true" weight="0.1097158" />
-      <window_info id="Structure" order="1" sideWeight="0.50249374" side_tool="true" weight="0.12540895" />
-      <window_info id="Favorites" order="2" sideWeight="0.5026643" side_tool="true" weight="0.17514871" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.50700283" weight="0.20992908" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4972737" weight="0.25987527" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49836424" weight="0.32711622" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.19432624" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49672845" weight="0.32624114" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.4929972" side_tool="true" weight="0.3558106" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.22695035" />
-      <window_info anchor="bottom" id="Messages" order="11" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="R Graphics" order="3" />
-      <window_info anchor="right" id="R Packages" order="4" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -627,35 +678,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stuff.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/city/city.py">
+    <entry file="file://$PROJECT_DIR$/stuff.png" />
+    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/matplotlib/backend_bases.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="771" column="21" lean-forward="true" selection-start-line="771" selection-start-column="21" selection-end-line="771" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-            <marker date="1559759688968" expanded="true" signature="578:589" ph="..." />
-          </folding>
+        <state relative-caret-position="246">
+          <caret line="3301" selection-start-line="3301" selection-end-line="3301" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Inter2/intersection2.py">
+    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/matplotlib/backends/_backend_tk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="32" column="11" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-            <marker date="1559757479505" expanded="true" signature="1774:1784" ph="..." />
-          </folding>
+        <state relative-caret-position="620">
+          <caret line="976" column="41" lean-forward="true" selection-start-line="976" selection-start-column="41" selection-end-line="976" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/city/City.kv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="80" column="12" selection-start-line="80" selection-start-column="12" selection-end-line="80" selection-end-column="12" />
+        <state relative-caret-position="705">
+          <caret line="88" column="28" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Inter2/intersection2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="32" column="11" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/city/graphs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="46" column="17" lean-forward="true" selection-start-line="46" selection-start-column="17" selection-end-line="46" selection-end-column="406" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/currentMat.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="19" lean-forward="true" selection-start-line="26" selection-start-column="19" selection-end-line="26" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/city/currentMat.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/city/city.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="582">
+          <caret line="771" column="19" lean-forward="true" selection-start-line="771" selection-start-column="19" selection-end-line="771" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <marker date="1560190894544" expanded="true" signature="13378:13399" ph="..." />
+            <marker date="1560190894544" expanded="true" signature="14924:14978" ph="..." />
+            <marker date="1560190894544" expanded="true" signature="34032:34038" ph="..." />
+            <marker date="1560190894544" expanded="true" signature="34895:34904" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
